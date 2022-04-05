@@ -1,3 +1,6 @@
+*.crx
+*.pem
+
 # Logs
 logs
 *.log
