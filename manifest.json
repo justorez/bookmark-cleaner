@@ -12,15 +12,8 @@
         "default_popup": "src/popup.html",
         "default_title": "点击去清理~"
     },
-    "background": {
-        "page": "src/background.html"
-    },
     "permissions": [
-        "tabs",
         "bookmarks",
-        "contextMenus",
-        "webRequest",
-        "storage",
         "http://*/*",
         "https://*/*"
     ],

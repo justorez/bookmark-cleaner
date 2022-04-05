@@ -47,7 +47,7 @@ const App = {
                 console.log('[check finished]', this.checkStartIndex)
                 this.showProgress = false
                 this.checkLoading = false
-                this.checkStartIndex = 0
+                setTimeout(() => this.checkStartIndex = 0, 1000)
                 this.percentage = 0
                 this.queryList()
             }
