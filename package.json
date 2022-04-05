@@ -1,0 +1,23 @@
+{
+  "name": "bookmark-cleaner",
+  "version": "0.0.1",
+  "description": "自动检测失效书签链接，一键清理 🚀",
+  "main": "index.js",
+  "scripts": {
+    "dist": "shx rm -rf dist && shx mkdir dist && shx cp -r manifest.json src icons dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justorez/bookmark-cleaner.git"
+  },
+  "keywords": [],
+  "author": "justorez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/justorez/bookmark-cleaner/issues"
+  },
+  "homepage": "https://github.com/justorez/bookmark-cleaner#readme",
+  "devDependencies": {
+    "shx": "^0.3.4"
+  }
+}
