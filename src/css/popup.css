@@ -1,0 +1,9 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#app {
+    /* width: 100px; */
+    text-align: center;
+}

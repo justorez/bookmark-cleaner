@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmark Cleaner</title>
+    <link rel="stylesheet" href="./css/background.css">
+    <link rel="stylesheet" href="./css/element-plus.css">
+</head>
+<body>
+    <div id="app">
+        <el-main v-cloak>
+            <el-form inline>
+                <el-form-item label="链接最长等待时间（秒）">
+                    <el-input-number 
+                        v-model="timeout" 
+                        :min="1"
+                        :controls="false" 
+                    />
+                </el-form-item>
+                <el-form-item>
+                    <el-button 
+                        :loading="checkLoading"
+                        @click="startCheck"
+                    >{{ checkButtonText }}</el-button>
+                    <el-button @click="stopCheck">停止检测</el-button>
+                    <el-button @click="resetCheck">重置</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button 
+                        type="danger" 
+                        plain
+                        :disabled="clearSelectedDisabled"
+                        @click="clearSelected"
+                    >清理选中的书签</el-button>
+                    <el-button 
+                        type="danger" 
+                        plain
+                        :disabled="clearDisabled"
+                        :title="clearButtonTitle"
+                        @click="clearAll"
+                    >一键清理失效书签</el-button>
+                </el-form-item>
+            </el-form>
+
+            <el-progress 
+                v-show="showProgress"
+                text-inside  
+                status="success"
+                :stroke-width="26" 
+                :percentage="percentage"
+                :format="formatProgress"
+            ></el-progress>
+    
+            <el-table 
+                :data="tableData" 
+                v-loading="tableLoading"
+                strip border
+                style="margin-top: 18px;"
+                @selection-change="handleSelectionChange"
+                ref="tableComp"
+            >
+                <el-table-column type="selection" width="55" align="center"></el-table-column>
+                <el-table-column label="失效书签标题" show-overflow-tooltip>
+                    <template #default="{ row }">
+                        {{ row.path.join(' / ') }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="失效书签链接">
+                    <template #default="{ row }">
+                        <el-link class="link-box" :href="row.url" target="_blank">
+                            <span class="overflow">{{ row.url }}</span>
+                        </el-link>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="error" label="错误信息" show-overflow-tooltip>
+                    <template #default="{ row }">
+                        <el-link :underline="false" type="danger">
+                            {{ row.error.message }}
+                        </el-link>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作">
+                    <template #default="{ row }">
+                        <el-popconfirm 
+                            title="确定删除该书签吗？" 
+                            placement="top"
+                            hide-icon
+                            @confirm="deleteOne(row)"
+                        >
+                            <template #reference>
+                                <el-button type="danger" plain>删除</el-button>
+                            </template>
+                        </el-popconfirm>
+                        <el-popconfirm 
+                            title="确定忽略该书签吗？" 
+                            placement="top"
+                            hide-icon
+                            @confirm="ignore(row)"
+                        >
+                            <template #reference>
+                                <el-button type="success" plain>忽略</el-button>
+                            </template>
+                        </el-popconfirm>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+            <div class="footer">
+                <el-button @click="selectPage">
+                    {{ isPageSelected ? '取消全选' : '全选当前页' }}
+                </el-button>
+                <el-pagination
+                    v-model:current-page="currentPage"
+                    v-model:page-size="pageSize"
+                    :page-sizes="[10, 20, 30]"
+                    :total="total"
+                    background
+                    layout="->, total, sizes, prev, pager, next, jumper"
+                    style="margin-top: 18px;"
+                    @current-change="handleCurrentChange"
+                    @size-change="handleSizeChange"
+                ></el-pagination>
+            </div>
+        </el-main>
+    </div>
+
+    <script src="./js/axios.js" defer></script>
+    <script src="./js/vue.js"></script>
+    <script src="./js/element-plus/index.js"></script>
+    <script src="./js/element-plus/zh-cn.js"></script>
+    <script type="module" src="./js/background.js"></script>
+</body>
+</html>

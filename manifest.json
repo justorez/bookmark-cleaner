@@ -1,0 +1,28 @@
+{
+    "name": "Bookmark Cleaner 一键清理失效书签",
+    "version": "0.0.1",
+    "manifest_version": 2,
+    "description": "自动检测失效书签链接，一键清理 🚀",
+    "icons": {
+        "16": "icons/16.png",
+        "48": "icons/48.png",
+        "128": "icons/128.png"
+    },
+    "browser_action": {
+        "default_popup": "src/popup.html",
+        "default_title": "点击去清理~"
+    },
+    "background": {
+        "page": "src/background.html"
+    },
+    "permissions": [
+        "tabs",
+        "bookmarks",
+        "contextMenus",
+        "webRequest",
+        "storage",
+        "http://*/*",
+        "https://*/*"
+    ],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
