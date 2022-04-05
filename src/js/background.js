@@ -24,8 +24,7 @@ const App = {
         checkButtonText() {
             const start = this.checkStartIndex
             return this.checkLoading ? '检测中...'
-                : start === 0 || start === this.bookmarks.length 
-                    ? '开始检测' : '继续检测'
+                : start === 0 ? '开始检测' : '继续检测'
         },
         clearDisabled() {
             return this.invalidBookmarks.length === 0
@@ -48,6 +47,7 @@ const App = {
                 console.log('[check finished]', this.checkStartIndex)
                 this.showProgress = false
                 this.checkLoading = false
+                this.checkStartIndex = 0
                 this.percentage = 0
                 this.queryList()
             }
@@ -166,6 +166,7 @@ const App = {
                     type: 'info',
                 })
                 this.deleteList(this.invalidBookmarks)
+                this.resetCheck()
             } catch (error) {
                 
             }
