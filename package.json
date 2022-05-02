@@ -1,24 +1,41 @@
 {
   "name": "bookmark-cleaner",
-  "version": "0.0.1",
+  "private": true,
+  "version": "0.0.2",
   "description": "自动检测失效书签链接，一键清理 🚀",
-  "main": "index.js",
+  "author": "justorez",
+  "license": "MIT",
   "scripts": {
-    "dist": "node script/dist.js"
+    "dev": "vite build --watch",
+    "build": "vue-tsc --noEmit && vite build",
+    "clear": "node scripts/clear.js",
+    "dist": "pnpm build && node scripts/zip.js"
   },
+  "homepage": "https://github.com/justorez/bookmark-cleaner#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/justorez/bookmark-cleaner.git"
   },
-  "keywords": [],
-  "author": "justorez",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/justorez/bookmark-cleaner/issues"
   },
-  "homepage": "https://github.com/justorez/bookmark-cleaner#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "element-plus": "^2.1.11",
+    "vue": "^3.2.25"
+  },
   "devDependencies": {
+    "@types/chrome": "^0.0.183",
+    "@types/node": "^17.0.30",
+    "@vitejs/plugin-vue": "^2.3.1",
     "adm-zip": "^0.5.9",
-    "shelljs": "^0.8.5"
+    "less": "^4.1.2",
+    "less-loader": "^10.2.0",
+    "shelljs": "^0.8.5",
+    "typescript": "^4.5.4",
+    "unplugin-element-plus": "^0.4.0",
+    "vite": "^2.9.5",
+    "vite-plugin-static-copy": "^0.5.0",
+    "vue-tsc": "^0.34.7"
   }
 }

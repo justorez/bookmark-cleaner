@@ -1,5 +1,10 @@
-async function checkURL(url, timeout) {
-    if (url.includes('chrome://') || url.includes('edge://')) {
+import axios from 'axios'
+import { TimeoutError } from './errors'
+
+const whitelist = /chrome:\/\/|edge:\/\/|file:\/\/|localhost:|127.0.0.1/i
+
+async function checkURL(url: string | undefined, timeout: number) {
+    if (!url || whitelist.test(url)) {
         return Promise.resolve()
     }
 
@@ -8,8 +13,8 @@ async function checkURL(url, timeout) {
     })
 }
 
-async function checkURLByFetch(url, timeout) {
-    if (url.includes('chrome://') || url.includes('edge://')) {
+async function checkURLByFetch(url: string | undefined, timeout: number) {
+    if (!url || whitelist.test(url)) {
         return Promise.resolve()
     }
 
@@ -20,10 +25,9 @@ async function checkURLByFetch(url, timeout) {
         new Promise((_, reject) => {
             setTimeout(() => {
                 controller.abort()
-                let err = new Error('Fetch Timeout')
-                err.timeout = true
+                const err = new TimeoutError('Fetch Timeout')
                 reject(err)
-            }, this.timeout * 1000)
+            }, timeout * 1000)
         })
     ])
 }
