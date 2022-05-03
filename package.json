@@ -6,8 +6,8 @@
   "author": "justorez",
   "license": "MIT",
   "scripts": {
-    "dev": "vite build --watch",
-    "build": "vue-tsc --noEmit && vite build",
+    "dev": "cross-env MODE=dev vite build --watch",
+    "build": "vue-tsc --noEmit && cross-env MODE=prod vite build",
     "clear": "node scripts/clear.js",
     "dist": "pnpm build && node scripts/zip.js"
   },
@@ -29,6 +29,7 @@
     "@types/node": "^17.0.30",
     "@vitejs/plugin-vue": "^2.3.1",
     "adm-zip": "^0.5.9",
+    "cross-env": "^7.0.3",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
     "shelljs": "^0.8.5",
