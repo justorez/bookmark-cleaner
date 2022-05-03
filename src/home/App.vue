@@ -60,9 +60,31 @@
             </el-table-column>
             <el-table-column label="失效书签链接">
                 <template #default="{ row }">
-                    <el-link class="link-box" :href="row.url" target="_blank">
-                        <span class="overflow">{{ row.url }}</span>
-                    </el-link>
+                    <div class="flex-box" v-show="row.editing">
+                        <el-input
+                            v-model="row.url"
+                            v-focus
+                            placeholder="请输入新的链接"
+                            @keyup.enter="changeURL(row)"
+                        ></el-input> &nbsp;
+                        <el-button @click="row.editing=false">取消</el-button>
+                    </div>
+                    <div class="flex-box flex-box--end" v-show="!row.editing">
+                        <el-link 
+                            class="link-box" 
+                            :href="row.url" 
+                            target="_blank"
+                        >
+                            <span class="overflow">{{ row.url }}</span>
+                        </el-link> &nbsp;
+                        <el-button
+                            class="icon-btn--inline"
+                            type="text"
+                            icon="edit"
+                            title="编辑（回车保存）"
+                            @click="row.editing=true"
+                        ></el-button>
+                    </div>
                 </template>
             </el-table-column>
             <el-table-column
@@ -72,7 +94,7 @@
             >
                 <template #default="{ row }">
                     <el-link :underline="false" type="danger">
-                        {{ row.error.message }}
+                        {{ row.error && row.error.message }}
                     </el-link>
                 </template>
             </el-table-column>
@@ -85,7 +107,13 @@
                         @confirm="deleteOne(row)"
                     >
                         <template #reference>
-                            <el-button type="danger" plain>删除</el-button>
+                            <el-button 
+                                type="danger" 
+                                icon="delete" 
+                                plain 
+                                circle
+                                title="删除"
+                            ></el-button>
                         </template>
                     </el-popconfirm>
                     <el-popconfirm
@@ -95,7 +123,13 @@
                         @confirm="ignore(row)"
                     >
                         <template #reference>
-                            <el-button type="success" plain>忽略</el-button>
+                            <el-button 
+                                type="success" 
+                                icon="minus" 
+                                plain 
+                                circle
+                                title="忽略"
+                            ></el-button>
                         </template>
                     </el-popconfirm>
                 </template>
@@ -127,7 +161,9 @@ import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import Scheduler from './utils/scheduler'
 import { checkURL } from './utils/check'
 import { Bookmark, ElTableInstance, InvalidBookmarks } from './interface'
-import { ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import native from './utils/native'
+import { Whitelist } from './utils'
 
 export default defineComponent({
     name: 'home',
@@ -142,6 +178,7 @@ export default defineComponent({
             bookmarks: [] as Bookmark[],
             invalidBookmarks:[] as InvalidBookmarks[],
             tableData: [] as InvalidBookmarks[],
+            whitelist: new Whitelist(),
             currentPage: 1,
             pageSize: 10,
             total: 0,
@@ -183,35 +220,18 @@ export default defineComponent({
             }
         }
     },
-    mounted() {
-        this.init()
+    async mounted() {
+        this.bookmarks = await native.getBookmarks()
+
+        // mock
+        let testNode = { 
+            ...this.bookmarks[0],
+            // url: this.bookmarks[0].url?.repeat(2),
+            error: new Error('Test Node')
+        }
+        this.tableData.push(testNode)
     },
     methods: {
-        init() {
-            chrome.bookmarks.getTree(tree => {
-                // console.log(tree[0])
-                this.getBookmarks(tree[0])
-            })
-        },
-        getBookmarks(node: chrome.bookmarks.BookmarkTreeNode, path:string[] = []) {
-            if (node.title && !['1', '2'].includes(node.id)) {
-                path.push(node.title)
-            }
-
-            if (!node.children) {
-                this.bookmarks.push({
-                    ...node, 
-                    path: [...path] // 若直接使用 path，由于指向的都是同一个数组，递归结束，数组为空
-                })
-                path.pop()
-                return
-            }
-            
-            for (const _node of node.children) {
-                this.getBookmarks(_node, path)
-            }
-            path.pop()
-        },
         queryList() {
             this.tableData = this.invalidBookmarks.slice(
                 (this.currentPage - 1) * this.pageSize,
@@ -233,6 +253,7 @@ export default defineComponent({
             this.total = 0
         },
         startCheck() {
+            this.bookmarks = this.bookmarks.filter(item => !this.whitelist.has(item.id))
             const list = this.bookmarks.slice(this.checkStartIndex)
             const step = 100 / this.bookmarks.length
             console.log('[startCheck]', this.checkStartIndex, step)
@@ -269,10 +290,9 @@ export default defineComponent({
             this.checkLoading = false
             this.resetList()
         },
-        deleteOne(item: InvalidBookmarks) {
-            chrome.bookmarks.remove(item.id, () => {
-                this.ignore(item)
-            })
+        async deleteOne(item: InvalidBookmarks) {
+            await chrome.bookmarks.remove(item.id)
+            this.ignore(item)
         },
         deleteList(list: InvalidBookmarks[]) {
             for (const item of list) {
@@ -285,9 +305,30 @@ export default defineComponent({
                 data = [ data ]
             }
             const ids = data.map(item => item.id)
+            this.whitelist.add(ids)
             this.bookmarks = this.bookmarks.filter(item => !ids.includes(item.id))
             this.invalidBookmarks = this.invalidBookmarks.filter(item => !ids.includes(item.id))
             flush && this.queryList()
+        },
+        changeURL(row: InvalidBookmarks) {
+            if (!row.url) {
+                ElMessage.warning('链接不能为空！')
+            }
+            chrome.bookmarks.update(row.id, { url: row.url })
+            this.tableLoading = true
+            checkURL(row.url, this.timeout)
+                .then(() => {
+                    ElMessage.success('新链接有效~')
+                    row.error = new Error('---')
+                    this.ignore(row)
+                })
+                .catch(error => {
+                    row.error = error
+                })
+                .finally(() => {
+                    this.tableLoading = false
+                    row.editing = false
+                })
         },
         async clearAll() {
             try {
@@ -360,6 +401,26 @@ body {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+.icon-btn--inline {
+    height: auto;
+    padding: 0;
+    font-size: 18px;
+}
+
+.flex-box {
+    display: flex;
+    align-items: center;
+    width: 90%;
+
+    &--end {
+        align-items: flex-end;
+    }
+   
+    *:last-child {
+        flex-shrink: 0;
+    }
 }
 
 .footer {

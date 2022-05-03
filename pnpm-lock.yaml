@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@element-plus/icons-vue': ^1.1.4
   '@types/chrome': ^0.0.183
   '@types/node': ^17.0.30
   '@vitejs/plugin-vue': ^2.3.1
@@ -9,7 +10,6 @@ specifiers:
   cross-env: ^7.0.3
   element-plus: ^2.1.11
   less: ^4.1.2
-  less-loader: ^10.2.0
   shelljs: ^0.8.5
   typescript: ^4.5.4
   unplugin-element-plus: ^0.4.0
@@ -19,6 +19,7 @@ specifiers:
   vue-tsc: ^0.34.7
 
 dependencies:
+  '@element-plus/icons-vue': 1.1.4_vue@3.2.33
   axios: 0.27.2
   element-plus: 2.1.11_vue@3.2.33
   vue: 3.2.33
@@ -30,7 +31,6 @@ devDependencies:
   adm-zip: 0.5.9
   cross-env: 7.0.3
   less: 4.1.2
-  less-loader: 10.2.0_less@4.1.2
   shelljs: 0.8.5
   typescript: 4.6.4
   unplugin-element-plus: 0.4.0_vite@2.9.6
@@ -838,22 +838,6 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.10
-    dev: true
-
-  /klona/2.0.5:
-    resolution: {integrity: sha512-pJiBpiXMbt7dkzXe8Ghj/u4FfXOOa98fPW+bihOJ4SjnoijweJrNThJfd3ifXpXhREjpoF2mZVH1GfS9LV3kHQ==}
-    engines: {node: '>= 8'}
-    dev: true
-
-  /less-loader/10.2.0_less@4.1.2:
-    resolution: {integrity: sha512-AV5KHWvCezW27GT90WATaDnfXBv99llDbtaj4bshq6DvAihMdNjaPDcUMa6EXKLRF+P2opFenJp89BXg91XLYg==}
-    engines: {node: '>= 12.13.0'}
-    peerDependencies:
-      less: ^3.5.0 || ^4.0.0
-      webpack: ^5.0.0
-    dependencies:
-      klona: 2.0.5
-      less: 4.1.2
     dev: true
 
   /less/4.1.2:

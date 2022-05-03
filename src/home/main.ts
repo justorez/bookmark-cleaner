@@ -1,7 +1,12 @@
 import { createApp } from 'vue'
-import App from './App.vue'
-import { useElementPlus } from './components'
+import App from './app.vue'
+import myComponents from './components'
+import myDirectives from './directives'
 
-const app = createApp(App)
-useElementPlus(app)
-app.mount('#app')
+console.log(import.meta.env)
+console.log(process.env.NODE_ENV)
+
+createApp(App)
+    .use(myComponents)
+    .use(myDirectives)
+    .mount('#app')

@@ -6,8 +6,8 @@
   "author": "justorez",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env MODE=dev vite build --watch",
-    "build": "vue-tsc --noEmit && cross-env MODE=prod vite build",
+    "dev": "cross-env MODE=dev vite build --watch --mode development",
+    "build": "vue-tsc --noEmit && cross-env MODE=prod vite build --mode production",
     "clear": "node scripts/clear.js",
     "dist": "pnpm build && node scripts/zip.js"
   },
@@ -20,6 +20,7 @@
     "url": "https://github.com/justorez/bookmark-cleaner/issues"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^1.1.4",
     "axios": "^0.27.2",
     "element-plus": "^2.1.11",
     "vue": "^3.2.25"
@@ -31,7 +32,6 @@
     "adm-zip": "^0.5.9",
     "cross-env": "^7.0.3",
     "less": "^4.1.2",
-    "less-loader": "^10.2.0",
     "shelljs": "^0.8.5",
     "typescript": "^4.5.4",
     "unplugin-element-plus": "^0.4.0",

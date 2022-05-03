@@ -19,12 +19,12 @@ export default defineConfig({
         ElementPlus()
     ],
     build: {
+        sourcemap: isDev ? true : false,
         minify: isDev ? false : 'esbuild',
         rollupOptions: {
             input: {
                 popup: resolve('index.html'),
-                home: resolve('src/home.html'),
-                background: resolve('src/background.ts')
+                home: resolve('src/home.html')
             }
         }
     }
