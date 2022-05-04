@@ -10,7 +10,3 @@ createApp(App)
     .use(myComponents)
     .use(myDirectives)
     .mount('#app')
-
-if (import.meta.env.DEV && import.meta.hot) {
-    
-}
