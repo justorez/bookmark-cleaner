@@ -3,12 +3,14 @@ import { env } from 'process'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import ElementPlus from 'unplugin-element-plus/vite'
+import buildNotifier from './.vite/plugins/rollup-plugin-notifier'
 
-const isDev = env.MODE === 'dev'
+const isProd = env.MODE === 'prod'
 const resolve = (dest) => path.resolve(__dirname, dest)
 
 // https://cn.vitejs.dev/config/
 export default defineConfig({
+    mode: isProd ? 'production' : 'development',
     resolve: {
         alias: {
             '@': resolve('src')
@@ -16,15 +18,16 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        ElementPlus()
+        ElementPlus(),
+        buildNotifier()
     ],
     build: {
-        sourcemap: isDev ? true : false,
-        minify: isDev ? false : 'esbuild',
+        sourcemap: !isProd,
+        minify: isProd ? 'esbuild' : false,
         rollupOptions: {
             input: {
                 popup: resolve('index.html'),
-                home: resolve('src/home.html')
+                home: resolve('src/home/index.html')
             }
         }
     }

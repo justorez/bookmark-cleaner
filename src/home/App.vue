@@ -104,7 +104,7 @@
                         title="确定删除该书签吗？"
                         placement="top"
                         hide-icon
-                        @confirm="deleteOne(row)"
+                        @confirm="deleteBookmark(row)"
                     >
                         <template #reference>
                             <el-button 
@@ -160,10 +160,10 @@ import { defineComponent } from 'vue'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import Scheduler from './utils/scheduler'
 import { checkURL } from './utils/check'
-import { Bookmark, ElTableInstance, InvalidBookmarks } from './interface'
+import { Bookmark, ElTableInstance, InvalidBookmark } from './interface'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import native from './utils/native'
-import { Whitelist } from './utils'
+import Whitelist from './utils/whitelist'
 
 export default defineComponent({
     name: 'home',
@@ -176,15 +176,15 @@ export default defineComponent({
             checkLoading: false,
             checkStartIndex: 0,
             bookmarks: [] as Bookmark[],
-            invalidBookmarks:[] as InvalidBookmarks[],
-            tableData: [] as InvalidBookmarks[],
+            invalidBookmarks:[] as InvalidBookmark[],
+            tableData: [] as InvalidBookmark[],
             whitelist: new Whitelist(),
             currentPage: 1,
             pageSize: 10,
             total: 0,
             tableLoading: false,
             scheduler: new Scheduler(10),
-            selectedData: [] as InvalidBookmarks[]
+            selectedData: [] as InvalidBookmark[]
         }
     },
     computed: {
@@ -224,12 +224,12 @@ export default defineComponent({
         this.bookmarks = await native.getBookmarks()
 
         // mock
-        let testNode = { 
-            ...this.bookmarks[0],
-            // url: this.bookmarks[0].url?.repeat(2),
-            error: new Error('Test Node')
-        }
-        this.tableData.push(testNode)
+        // let testNode = { 
+        //     ...this.bookmarks[0],
+        //     url: this.bookmarks[0].url?.repeat(2),
+        //     error: new Error('Test Node')
+        // }
+        // this.tableData.push(testNode)
     },
     methods: {
         queryList() {
@@ -253,7 +253,8 @@ export default defineComponent({
             this.total = 0
         },
         startCheck() {
-            this.bookmarks = this.bookmarks.filter(item => !this.whitelist.has(item.id))
+            this.bookmarks = this.bookmarks
+                .filter(item => item.url && !this.whitelist.has(item.url))
             const list = this.bookmarks.slice(this.checkStartIndex)
             const step = 100 / this.bookmarks.length
             console.log('[startCheck]', this.checkStartIndex, step)
@@ -268,7 +269,7 @@ export default defineComponent({
                         })
                     })
                     .finally(() => {
-                        this.checkStartIndex += 1
+                        this.checkStartIndex++
                         this.percentage += step
                     })
             }
@@ -290,27 +291,39 @@ export default defineComponent({
             this.checkLoading = false
             this.resetList()
         },
-        async deleteOne(item: InvalidBookmarks) {
-            await chrome.bookmarks.remove(item.id)
-            this.ignore(item)
-        },
-        deleteList(list: InvalidBookmarks[]) {
-            for (const item of list) {
-                chrome.bookmarks.remove(item.id)
-            }
-            this.ignore(list)
-        },
-        ignore(data: InvalidBookmarks | InvalidBookmarks[], flush = true) {
+        deleteBookmark(data: InvalidBookmark | InvalidBookmark[]) {
             if (!Array.isArray(data)) {
                 data = [ data ]
             }
+
+            for (const item of data) {
+                chrome.bookmarks.remove(item.id)
+                this.checkStartIndex--
+            }
+
             const ids = data.map(item => item.id)
-            this.whitelist.add(ids)
             this.bookmarks = this.bookmarks.filter(item => !ids.includes(item.id))
             this.invalidBookmarks = this.invalidBookmarks.filter(item => !ids.includes(item.id))
-            flush && this.queryList()
+            this.queryList()
         },
-        changeURL(row: InvalidBookmarks) {
+        ignore(data: InvalidBookmark | InvalidBookmark[]) {
+            if (!Array.isArray(data)) {
+                data = [ data ]
+            }
+
+            let ids:string[] = [], urls = []
+            for (const item of data) {
+                this.checkStartIndex--
+                ids.push(item.id)
+                item.url && urls.push(item.url)
+            }
+            
+            this.whitelist.add(urls)
+            this.bookmarks = this.bookmarks.filter(item => !ids.includes(item.id))
+            this.invalidBookmarks = this.invalidBookmarks.filter(item => !ids.includes(item.id))
+            this.queryList()
+        },
+        changeURL(row: InvalidBookmark) {
             if (!row.url) {
                 ElMessage.warning('链接不能为空！')
             }
@@ -335,7 +348,7 @@ export default defineComponent({
                 await ElMessageBox.confirm('清理前最好备份一下哦~，点击确定开始清理', '提示', {
                     type: 'info',
                 })
-                this.deleteList(this.invalidBookmarks)
+                this.deleteBookmark(this.invalidBookmarks)
                 this.resetCheck()
             } catch (error) {
                 
@@ -346,7 +359,7 @@ export default defineComponent({
                 await ElMessageBox.confirm('确定清理选中的书签吗？', '提示', {
                     type: 'info',
                 })
-                this.deleteList(this.selectedData)
+                this.deleteBookmark(this.selectedData)
             } catch (error) {
                 
             }
@@ -356,7 +369,7 @@ export default defineComponent({
                 (this.$refs.tableComp as ElTableInstance).toggleAllSelection()
             }
         },
-        handleSelectionChange(val: InvalidBookmarks[]) {
+        handleSelectionChange(val: InvalidBookmark[]) {
             this.selectedData = val
         },
         formatProgress(percentage: number) {
@@ -418,7 +431,7 @@ body {
         align-items: flex-end;
     }
    
-    *:last-child {
+    .el-button:last-child {
         flex-shrink: 0;
     }
 }

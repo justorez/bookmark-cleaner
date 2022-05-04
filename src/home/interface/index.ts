@@ -5,7 +5,7 @@ export interface Bookmark extends chrome.bookmarks.BookmarkTreeNode {
     editing: boolean
 }
 
-export interface InvalidBookmarks extends Bookmark {
+export interface InvalidBookmark extends Bookmark {
     error: Error
 }
 
