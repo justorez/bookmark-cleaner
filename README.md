@@ -27,7 +27,3 @@ pnpm dist
 ```
 
 打开自己的 Edge 开发者中心，上传 `dist/dist.zip` 即可。
-
-## TODO
-
-后续计划整理一个模板：Vite + Vue3 + TS → Browser Extension
