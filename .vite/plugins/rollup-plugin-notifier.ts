@@ -6,14 +6,14 @@ import { WebSocketServer, WebSocket } from 'ws'
  */
 export default function() {
     let wss: WebSocketServer
-    let ws:WebSocket
-    let timer
+    let ws: WebSocket
+    let timer: NodeJS.Timeout
 
-    const send = (msg) => {
+    const send = (msg: string) => {
         if (!ws) return
         msg = JSON.stringify(msg)
-        // console.log('\n[notifier send]', msg)
         ws.send(msg)
+        // console.log('\n[notifier send]', msg)
     }
 
     const close = () => {

@@ -1,4 +1,3 @@
-import { ElMessage, ElMessageBox } from "element-plus"
 import { Bookmark, InvalidBookmark, ElTableInstance } from "../interface"
 import { checkURL } from "../utils/check"
 import whitelist from "../utils/whitelist"

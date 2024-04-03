@@ -10,11 +10,12 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "lib": [
       "ESNext", 
       "DOM"
     ],
-    "skipLibCheck": true
+    "types": ["element-plus/global", "@types/chrome"]
   },
   "include": [
     "types/*.ts",

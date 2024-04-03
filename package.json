@@ -36,7 +36,6 @@
     "less": "^4.1.2",
     "rimraf": "^5.0.5",
     "rollup-plugin-visualizer": "^5.12.0",
-    "sass": "^1.72.0",
     "typescript": "^4.5.4",
     "unplugin-auto-import": "^0.17.5",
     "unplugin-vue-components": "^0.26.0",
