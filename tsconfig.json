@@ -17,9 +17,8 @@
     "skipLibCheck": true
   },
   "include": [
-    "typings/*.d.ts",
+    "types/*.ts",
     "src/**/*.ts", 
-    "src/**/*.d.ts", 
     "src/**/*.tsx", 
     "src/**/*.vue"
   ],

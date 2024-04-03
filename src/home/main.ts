@@ -1,12 +1,12 @@
 import { createApp } from 'vue'
 import App from './app.vue'
-import myComponents from './components'
-import myDirectives from './directives'
+import Icons from './components/icons'
+import directives from './directives'
 
 // console.log(import.meta.env)
 // console.log(process.env.NODE_ENV)
 
 createApp(App)
-    .use(myComponents)
-    .use(myDirectives)
+    .use(Icons)
+    .use(directives)
     .mount('#app')

@@ -33,7 +33,7 @@
         <el-progress
             v-show="showProgress"
             text-inside
-            status="success"
+            :status="percentage >= 100 ? 'success' : ''"
             :stroke-width="26"
             :percentage="percentage"
             :format="formatProgress"
@@ -124,7 +124,7 @@
                     >
                         <template #reference>
                             <el-button 
-                                type="success" 
+                                type="primary" 
                                 icon="minus" 
                                 plain 
                                 circle
@@ -162,7 +162,7 @@ import Scheduler from './utils/scheduler'
 import { checkURL } from './utils/check'
 import { Bookmark, ElTableInstance, InvalidBookmark } from './interface'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import native from './utils/native'
+import Native from './utils/native'
 import Whitelist from './utils/whitelist'
 
 export default defineComponent({
@@ -221,7 +221,7 @@ export default defineComponent({
         }
     },
     async mounted() {
-        this.bookmarks = await native.getBookmarks()
+        this.bookmarks = await Native.getBookmarks()
 
         // mock
         // let testNode = { 

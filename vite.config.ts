@@ -2,8 +2,11 @@ import path from 'path'
 import { env } from 'process'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import ElementPlus from 'unplugin-element-plus/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import buildNotifier from './.vite/plugins/rollup-plugin-notifier'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 const isProd = env.MODE === 'prod'
 const resolve = (dest) => path.resolve(__dirname, dest)
@@ -18,8 +21,16 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        ElementPlus(),
-        buildNotifier()
+        AutoImport({
+            resolvers: [ElementPlusResolver()],
+            dts: 'types/auto-imports.d.ts'
+        }),
+        Components({
+            resolvers: [ElementPlusResolver()],
+            dts: 'types/components.d.ts'
+        }),
+        buildNotifier(),
+        visualizer()
     ],
     build: {
         sourcemap: !isProd,
