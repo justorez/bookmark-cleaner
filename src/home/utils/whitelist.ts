@@ -35,4 +35,4 @@ class Whitelist {
     }
 }
 
-export default Whitelist
+export default new Whitelist()

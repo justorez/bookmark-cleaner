@@ -1,5 +1,5 @@
-import path from 'path'
-import { env } from 'process'
+import { env } from 'node:process'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -8,8 +8,8 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import buildNotifier from './.vite/plugins/rollup-plugin-notifier'
 import { visualizer } from 'rollup-plugin-visualizer'
 
-const isProd = env.MODE === 'prod'
-const resolve = (dest) => path.resolve(__dirname, dest)
+const isProd = env.NODE_ENV === 'production'
+const resolve = (p: string) => fileURLToPath(new URL(p, import.meta.url))
 
 // https://cn.vitejs.dev/config/
 export default defineConfig({
@@ -22,6 +22,7 @@ export default defineConfig({
     plugins: [
         vue(),
         AutoImport({
+            imports: ['vue'],
             resolvers: [ElementPlusResolver()],
             dts: 'types/auto-imports.d.ts'
         }),

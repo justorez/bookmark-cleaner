@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { TimeoutError } from './errors'
 
-const whitelist = /chrome:\/\/|edge:\/\/|file:\/\/|localhost:|127.0.0.1/i
+const whitelist = /chrome:\/\/|edge:\/\/|file:\/\/|localhost:|127.0.0.1|javascript:/i
 
-async function checkURL(url: string | undefined, timeout: number) {
+export async function checkURL(url: string | undefined, timeout: number) {
     if (!url || whitelist.test(url)) {
         return Promise.resolve()
     }
@@ -13,7 +13,7 @@ async function checkURL(url: string | undefined, timeout: number) {
     })
 }
 
-async function checkURLByFetch(url: string | undefined, timeout: number) {
+export async function checkURLByFetch(url: string | undefined, timeout: number) {
     if (!url || whitelist.test(url)) {
         return Promise.resolve()
     }
@@ -30,9 +30,4 @@ async function checkURLByFetch(url: string | undefined, timeout: number) {
             }, timeout * 1000)
         })
     ])
-}
-
-export {
-    checkURL,
-    checkURLByFetch
 }
