@@ -18,22 +18,8 @@ class Scheduler {
             throw new TypeError('action is not a function')
         }
 
-        if (this.activeCount < this.limit) {
-            this.activeCount++
-            try {
-                return await action()
-            } finally {
-                this.activeCount--
-                this.next()
-            }
-        } else {
-            let resolve: (value: unknown) => void
-            let reject: (reason?: any) => void
-            const ret = new Promise((res, rej) => {
-                resolve = res
-                reject = rej
-            })
-            const actionFunc = async () => {
+        return new Promise((resolve, reject) => {
+            const task = async () => {
                 try {
                     const res = await action()
                     resolve(res)
@@ -44,15 +30,15 @@ class Scheduler {
                     this.next()
                 }
             }
-            this.queue.push(actionFunc as never)
-            return ret
-        }
+            this.queue.push(task)
+            this.next()
+        })
     }
 
     next() {
         if (this.pendingCount > 0 && this.activeCount < this.limit) {
-            let task = this.queue.shift()
             this.activeCount++
+            const task = this.queue.shift()
             task && task()
         }
     }
