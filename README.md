@@ -1,6 +1,8 @@
 # Bookmark Cleaner
 
-> 自动检测失效书签链接，一键清理 🚀
+[中文](./README.CN.md) | [English](./README.md)
+
+> 🚀 Check and clean invalid browser bookmarks. [Installation page](https://microsoftedge.microsoft.com/addons/detail/bookmark-cleaner-%E4%B8%80%E9%94%AE%E6%B8%85%E7%90%86%E5%A4%B1%E6%95%88%E4%B9%A6%E7%AD%BE/ngmgejoidapgeildppmahnlegckjdggm).
 
 [![OE2ivj.png](https://s1.ax1x.com/2022/05/04/OE2ivj.png)](https://imgtu.com/i/OE2ivj)
 
@@ -8,22 +10,23 @@
 
 [![OE2m5T.png](https://s1.ax1x.com/2022/05/04/OE2m5T.png)](https://imgtu.com/i/OE2m5T)
 
-*没找到类似的插件，只好自力更生......*
+*I couldn't find the same extension, so I made it...*
 
-## 如何启动
+## Development
 
 ```sh
+pnpm install
 pnpm dev
 ```
+1. Open the extension management page: [edge://extensions](edge://extensions/)
+2. Open `Developer Mode`
+3. Click `Load Unzipped Extension`, and select the `dist` directory in this project
 
-打开浏览器扩展管理界面，开启`开发人员模式`，点击`加载解压缩的扩展`，选择 `dist` 目录即可。
+*Support for hot reloading: Modified source code, auto-recompile and browser auto-refresh!*
 
-> 已支持热重载：修改源码，自动重编译，浏览器自动刷新！
-
-## 发布打包
+## Publish
 
 ```sh
 pnpm dist
 ```
-
-打开自己的 Edge 开发者中心，上传 `dist/dist.zip` 即可。
+Open [Microsoft Partner Center](https://partner.microsoft.com/en-us/dashboard/microsoftedge/overview),  create a new extension and upload `dist/dist.zip`.
