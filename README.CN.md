@@ -1,6 +1,6 @@
 # Bookmark Cleaner
 
-[中文](./README.CN.md) | [English](./README.md)
+[English](./README.md) | 中文 
 
 > 🚀 自动检测失效书签链接，一键清理：[安装地址](https://microsoftedge.microsoft.com/addons/detail/bookmark-cleaner-%E4%B8%80%E9%94%AE%E6%B8%85%E7%90%86%E5%A4%B1%E6%95%88%E4%B9%A6%E7%AD%BE/ngmgejoidapgeildppmahnlegckjdggm)
 
