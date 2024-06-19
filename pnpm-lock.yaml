@@ -68,8 +68,8 @@ devDependencies:
     specifier: ^2.0.7
     version: 2.0.7(typescript@4.6.4)
   ws:
-    specifier: ^8.6.0
-    version: 8.6.0
+    specifier: ^8.17.1
+    version: 8.17.1
 
 packages:
 
@@ -2320,12 +2320,12 @@ packages:
       strip-ansi: 7.1.0
     dev: true
 
-  /ws@8.6.0:
-    resolution: {integrity: sha512-AzmM3aH3gk0aX7/rZLYvjdvZooofDu3fFOzGqcSnQ1tOcTWwhM/o+q++E8mAyVVIyUdajrkzWUGftaVSDLn1bw==}
+  /ws@8.17.1:
+    resolution: {integrity: sha512-6XQFvXTkbfUOZOKKILFG1PDK2NDQs4azKQl26T0YS5CxqWLgXajbPZ+h4gZekJyRqFU8pvnbAbbs/3TgRPy+GQ==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
-      utf-8-validate: ^5.0.2
+      utf-8-validate: '>=5.0.2'
     peerDependenciesMeta:
       bufferutil:
         optional: true
